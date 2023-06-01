@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/assets/1-a3b03b48.ico">
+      <style>
+          *{
+              border: 1px burlywood;
+              border-radius: 6px;
+              font:italic 1em Georgia, serif;
+          }
+          .layout{
+              display: flex;
+              flex-direction: column;
+              background-image: url("/assets/1-7de91fb5.png");
+              background-size: 100% 100%;
+              background-attachment: fixed;
+
+              width: 100%;
+              height: 100%;
+          }
+          .el-dialog{
+
+              border-radius:10px;
+              box-shadow:0 0 0 1px cornflowerblue;
+              position: relative;
+
+          &::after {
+               content: '';
+               position: absolute;
+               left: -50%;
+               top: -50%;
+               width: 200%;
+               height: 200%;
+               background-repeat: no-repeat;
+               background-size: 50% 50%, 50% 50%;
+               background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+               background-image: linear-gradient(#399953, #399953), linear-gradient(#fbb300, #fbb300), linear-gradient(#d53e33, #d53e33), linear-gradient(#377af5, #377af5);
+           }
+          }
+      </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>编程Blog</title>
+    <script type="module" crossorigin src="/assets/index-8e3fca25.js"></script>
+    <link rel="stylesheet" href="/assets/index-e1187bce.css">
+  </head>
+  
+  <script>
+      // 切换单元格模式
+      document.addEventListener('keydown', (e) => {
+          let markdown=null;
+          if (e.ctrlKey) {
+              let cells = document.querySelectorAll('.el-input__inner');
+              cells.forEach(cell => {
+
+
+                  markdown= cell.value;
+
+
+                  let htmls = marked.parse(markdown);
+                  console.log(htmls+"s");
+                  cell.value = htmls;
+                  cell.innerHTML = cell.value;
+
+
+              });
+
+          }
+          if (e.altKey) {
+              let cells = document.querySelectorAll('.el-input__inner');
+              cells.forEach(cell => {
+                  cell.innerHTML = markdown;
+              });
+          }
+
+      });
+
+
+  </script>
+  <body>
+    <div id="app"></div>
+    
+
+  </body>
+</html>
