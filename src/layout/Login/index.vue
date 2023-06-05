@@ -1,6 +1,5 @@
 <template>
   <div class="login">
-
     <div class="box">
       <form @submit.prevent="submitLogin" style="max-width: 460px">
         <div class="form-group">
@@ -53,9 +52,11 @@ const submitLogin = () => {
     return
   }
 
-  const storedUser = JSON.parse(localStorage.getItem('currentUser'))
+  const UsersALL = JSON.parse(localStorage.getItem('UsersALL'))
 
-  if (storedUser && storedUser.username === login.value.username && storedUser.password === login.value.password) {
+  const storedUser = UsersALL.find(user => user.username === login.value.username)
+
+  if (storedUser && storedUser.password === login.value.password) {
     alert('登录成功，欢迎您~' + storedUser.username)
     const currentUser = { username: login.value.username, password: login.value.password }
     localStorage.setItem('NowUser', JSON.stringify(currentUser))
@@ -79,9 +80,11 @@ const registerUser = () => {
     return
   }
 
-  const storedUser = JSON.parse(localStorage.getItem('currentUser'))
+  const UsersALL = JSON.parse(localStorage.getItem('UsersALL'))
 
-  if (storedUser && storedUser.username === login.value.username) {
+  const storedUser = UsersALL.find(user => user.username === login.value.username)
+
+  if (storedUser) {
     alert('注册失败，用户名已存在')
     return
   }
@@ -92,7 +95,8 @@ const registerUser = () => {
     password: login.value.password
   }
 
-  localStorage.setItem('currentUser', JSON.stringify(newUser))
+  UsersALL.push(newUser)
+  localStorage.setItem('UsersALL', JSON.stringify(UsersALL))
   alert('注册成功')
   router.push({ path: '/login' })
 }
