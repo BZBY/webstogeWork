@@ -1,26 +1,27 @@
 <template>
   <div class="login">
-    <div style="color:#666">登录您的账号以享受全部服务</div>
+
     <div class="box">
-      <el-form label-position="top" label-width="100px" :model="login" style="max-width: 460px">
-        <el-form-item label="用户名">
-          <el-input v-model="login.username" />
-        </el-form-item>
-        <el-form-item label="密码">
-          <el-input v-model="login.password" type="password" />
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="submitLogin">登录</el-button>
-          <el-button type="info" @click="toReg">没有账号</el-button>
-        </el-form-item>
-      </el-form>
+      <form @submit.prevent="submitLogin" style="max-width: 460px">
+        <div class="form-group">
+          <label for="username">用户名</label>
+          <input v-model="login.username" type="text" id="username" />
+        </div>
+        <div class="form-group">
+          <label for="password">密码</label>
+          <input v-model="login.password" type="password" id="password" />
+        </div>
+        <div class="form-buttons">
+          <button type="submit">登录</button>
+          <button type="button" @click="toReg">没有账号</button>
+        </div>
+      </form>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
 import { useRouter } from 'vue-router'
 
 const adminUsername = 'admin'
@@ -37,22 +38,17 @@ const login = ref({
 // 登录
 const submitLogin = () => {
   if (login.value.username === '' || login.value.password === '') {
-    ElMessage.error('请正确输入账号密码')
+    alert('请正确输入账号密码')
     return
   }
 
   const isAdmin = login.value.username === adminUsername && login.value.password === adminPassword
 
   if (isAdmin) {
-    ElMessage.success('管理员登录成功')
-    // 设置管理员登录状态
-    // 进行相应的处理
-    // 将登录后的账户数据存储到 Web Storage 中
+    alert('管理员登录成功')
     const currentUser = { username: login.value.username, password: login.value.password }
     localStorage.setItem('NowUser', JSON.stringify(currentUser))
-    // 获取当前页面的根路径
     const rootPath = window.location.origin
-    // 跳转到根路径
     window.location.href = rootPath
     return
   }
@@ -60,19 +56,14 @@ const submitLogin = () => {
   const storedUser = JSON.parse(localStorage.getItem('currentUser'))
 
   if (storedUser && storedUser.username === login.value.username && storedUser.password === login.value.password) {
-    ElMessage.success('登录成功，欢迎您~' + storedUser.username)
-    // 设置用户登录状态
-    // 进行相应的处理
-    // 将登录后的账户数据存储到 Web Storage 中
+    alert('登录成功，欢迎您~' + storedUser.username)
     const currentUser = { username: login.value.username, password: login.value.password }
     localStorage.setItem('NowUser', JSON.stringify(currentUser))
-    // 获取当前页面的根路径
     const rootPath = window.location.origin
-    // 跳转到根路径
     window.location.href = rootPath
     return
   } else {
-    ElMessage.error('账号或密码错误')
+    alert('账号或密码错误')
   }
 }
 
@@ -84,14 +75,14 @@ const toReg = () => {
 // 注册
 const registerUser = () => {
   if (login.value.username === adminUsername) {
-    ElMessage.error('注册失败，用户名不可用')
+    alert('注册失败，用户名不可用')
     return
   }
 
   const storedUser = JSON.parse(localStorage.getItem('currentUser'))
 
   if (storedUser && storedUser.username === login.value.username) {
-    ElMessage.error('注册失败，用户名已存在')
+    alert('注册失败，用户名已存在')
     return
   }
 
@@ -102,34 +93,68 @@ const registerUser = () => {
   }
 
   localStorage.setItem('currentUser', JSON.stringify(newUser))
-  ElMessage.success('注册成功')
+  alert('注册成功')
   router.push({ path: '/login' })
 }
 
 onMounted(() => {
-  // 清空本地存储的用户信息
   localStorage.removeItem('currentUser')
 })
 </script>
 
-<style scoped lang="less">
+<style scoped>
 .login {
   width: 100%;
-  height: 800px;
+  height: 100vh;
   background-color: #fff;
-  opacity: 90%;
-  margin-top: 10px;
   display: flex;
-  flex-flow: column;
+  justify-content: center;
   align-items: center;
-  padding: 30px;
+}
 
-  .box {
-    margin-top: 20px;
-    width: 500px;
-    height: 300px;
-    padding: 20px;
-    border: 1px solid #ccc;
-  }
+.box {
+  width: 90%;
+  max-width: 460px;
+  padding: 20px;
+  border: 1px solid #ccc;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+button[type="submit"],
+button[type="button"] {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button[type="button"] {
+  background-color: #ccc;
+}
+
+.form-buttons {
+  display: flex;
+  justify-content: space-between;
 }
 </style>

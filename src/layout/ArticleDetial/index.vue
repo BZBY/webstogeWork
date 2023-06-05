@@ -38,9 +38,7 @@
       <button v-if="isAuthor" @click="editArticle" class="editButton">编辑</button>
       <button v-if="isAuthor" @click="deleteArticle" class="deleteButton">删除</button>
     </div>
-    <div class="right">
-      <SideNew></SideNew>
-    </div>
+
   </div>
 </template>
 
@@ -200,7 +198,7 @@ const deleteArticle = () => {
   }
 
   .left {
-    width: 69%;
+    width: 99%;
     padding: 20px;
     margin-left: 2%;
     margin-right: 2%;

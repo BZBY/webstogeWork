@@ -8,22 +8,23 @@
               v-model="article.title"
               placeholder="请输入文章标题（3-20）字"
           ></el-input>
+
+
+        </el-form-item>
+        <el-form-item label="文章标签" >
+          <el-input  style="width: 100%" v-model="article.tag" placeholder="请输入标签"></el-input>
         </el-form-item>
       </div>
-      <el-divider />
+
       <div class="author">
 
-        <div>
-          <el-form-item label="文章标签" >
-            <el-input v-model="article.tag" placeholder="请输入标签"></el-input>
-          </el-form-item>
-        </div>
+
       </div>
 
       <div class="content">
         <el-form-item label="正文">
           <el-input
-              :autosize="{ minRows: 20, maxRows: 35 }"
+              :autosize="{ minRows: 10, maxRows: 20 }"
               type="textarea"
               v-model="article.content"
           ></el-input>
@@ -47,10 +48,6 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-
-
-
-
 // 从 Web Storage 中读取用户信息
 const userFromStorage = localStorage.getItem("NowUser");
 const User = reactive({
@@ -70,6 +67,7 @@ const article = reactive({
   createTime: "",
   desc: ""
 });
+
 import { onMounted } from "vue";
 
 onMounted(() => {
@@ -88,9 +86,6 @@ onMounted(() => {
     }
   }
 });
-
-
-
 
 const publish = () => {
   if (!User.isLogin) {
@@ -123,8 +118,6 @@ const publish = () => {
         createTime: new Date().toString(),
         desc: "desc : " + article.content.slice(0, 15) + (article.content.length > 15 ? "..." : "") // 添加此行
       };
-
-
 
       // 将新文章添加到文章数组中
       articles.push(newArticle);
@@ -176,7 +169,6 @@ const save = () => {
       localStorage.setItem("tmpWords", JSON.stringify(newArticle));
       localStorage.setItem("EditIs", "1");
 
-
       // 查找并替换现有文章数据中的对应文章
       const index = articles.findIndex(a => a.id === article.id);
       if (index !== -1) {
@@ -200,21 +192,20 @@ const save = () => {
 <style scoped lang='less'>
 .myCreate {
   margin-top: 10px;
-
   padding: 20px;
   font-size: larger;
   opacity: 90%;
   color: #100f0f;
-  font-weight:bolder;
+  font-weight: bolder;
 
   .articleArea {
     font-weight: bold;
     padding: 20px;
-    width: 70%;
-    margin: 0 auto;
+    width: 100%;
     border: 1px solid #0e7bef;
     background-color: #fff;
     border-radius: 13px;
+
     & > div {
       margin-bottom: 10px;
     }

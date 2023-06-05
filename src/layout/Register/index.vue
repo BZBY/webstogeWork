@@ -30,12 +30,15 @@
           <label for="phone">手机</label>
           <input v-model="register.phone" type="text" id="phone" required>
         </div>
-        <button type="submit">注册</button>
-        <button type="button" @click="reset">重置</button>
+        <div class="form-buttons">
+          <button type="submit">注册</button>
+          <button type="button" @click="reset">重置</button>
+        </div>
       </form>
     </div>
   </div>
 </template>
+
 <script>
 export default {
   data() {
@@ -141,21 +144,22 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 .register {
   width: 100%;
-  height: 800px;
   background-color: #fff;
   margin-top: 10px;
+  padding: 20px;
   display: flex;
-  flex-flow: column;
+  flex-direction: column;
   align-items: center;
-  padding: 30px;
 }
 
 .box {
   margin-top: 20px;
-  width: 500px;
+  width: 100%;
+  max-width: 500px;
   padding: 20px;
   border: 1px solid #ccc;
 }
@@ -163,6 +167,7 @@ export default {
 h2 {
   color: #666;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .form-group {
@@ -184,17 +189,16 @@ select {
   border-radius: 4px;
 }
 
-button {
-  padding: 10px 20px;
+button[type="submit"],
+button[type="button"] {
+  width: 100%;
+  padding: 10px;
   background-color: #007bff;
   color: #fff;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-}
-
-button[type="submit"] {
-  margin-right: 10px;
+  margin-top: 10px;
 }
 
 button[type="button"] {

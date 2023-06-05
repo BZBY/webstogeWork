@@ -14,17 +14,14 @@
         <ArticleCard v-for="item in hotList" :info="item" :key="item.id"></ArticleCard>
       </div>
     </div>
-    <div class="right">
-      <!-- 最新发布 -->
-      <SideNew></SideNew>
-    </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
 import ArticleCard from '@/components/articleCard.vue'
-import SideNew from '../../components/SideNew.vue'
+
 
 // 热门博文列表
 const hotList = reactive([])
@@ -158,7 +155,7 @@ const searchArticles = () => {
   opacity: 90%;
 
   .left {
-    width: 69%;
+    width: 100%;
     background-color: #fff;
     padding: 20px;
     margin-right: 10px;

@@ -46,34 +46,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>编程Blog</title>
   </head>
-  <script  type="module"  src="marked.js"></script>
-  <script>
-      // 切换单元格模式
-      document.addEventListener('keydown', (e) => {
-          let markdown=null;
-          if (e.ctrlKey) {
-              let cells = document.querySelectorAll('.el-input__inner');
-              cells.forEach(cell => {
 
-
-                  markdown= cell.value;
-
-
-                  let htmls = marked.parse(markdown);
-                  console.log(htmls+"s");
-                  cell.value = htmls;
-                  cell.innerHTML = cell.value;
-
-
-              });
-
-          }
-
-
-      });
-
-
-  </script>
   <body>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>

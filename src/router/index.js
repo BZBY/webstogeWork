@@ -43,6 +43,11 @@ const router = createRouter({
       component: MyCreate 
     },
     {
+      path: '/note',
+      name: 'Note',
+      component: Note
+    },
+    {
       path: '/userCenter',
       name: 'Center',
       component: Center //个人中心
