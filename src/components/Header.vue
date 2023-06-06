@@ -5,7 +5,7 @@
       <div class="title">
         <img src="../assets/images/icon.jpg" alt="" /> &nbsp; Blog
       </div>
-      <div class="desc">~~<span class="menu-icon" @click="toggleMenu">选项</span>~</div>
+      <div class="desc" ><span class="username" @click="goToUserCenter">{{ username }}</span><span class="menu-icon" @click="toggleMenu"></span></div>
       <div class="date">{{ moment(nowDate).format("YYYY年MM月DD日") }}</div>
     </div>
     <!-- 导航栏 -->
@@ -43,6 +43,8 @@ const router = useRouter();
 
 const currentId = ref(0);
 const Day = useStore();
+const currentUser = JSON.parse(localStorage.getItem('NowUser'));
+const username = ref(currentUser ? currentUser.nickname : '');
 
 // 当前日期
 const nowDate = ref(new Date());
@@ -92,6 +94,9 @@ const login = reactive([
 
 // 显示菜单
 const showMenu = ref(false);
+const goToUserCenter = () => {
+  router.push('/userCenter');
+};
 
 // 切换菜单显示
 const toggleMenu = () => {
