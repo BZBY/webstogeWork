@@ -209,8 +209,8 @@ const logout = () => {
   color: black;
   cursor: pointer;
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 8%;
+  right:5%;
   z-index: 999;
   padding: 2px;
 
