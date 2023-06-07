@@ -1,111 +1,110 @@
 <template>
-    <div class="myPublish">
-        <!-- 我的发布列表 -->
-        <div class="title">My ~ Publish</div>
-        <ul>
-            <li v-for="item in publish.list">
-                <el-descriptions class="margin-top" :column="3" border>
-                    <el-descriptions-item span="2" label="标题">{{item.title}}</el-descriptions-item>
-                    <el-descriptions-item span="1" label="作者">{{item.author}}</el-descriptions-item>
-                    <el-descriptions-item span="2" label="时间">{{ moment(item.createTime).format('YYYY年MM月DD日 hh时mm分ss秒') }}</el-descriptions-item>
-                    <el-descriptions-item span="1" label="操作">
-                        <el-button type="text" @click="check(item)">查看</el-button>
-                        <el-button type="text" @click="deleteArticle(item.id)">删除</el-button>
-                    </el-descriptions-item>
-                </el-descriptions>
-            </li>
-        </ul>
+  <div class="myPublish">
+    <!-- 我的发布列表 -->
+    <div class="title">My ~ Publish</div>
+    <ul>
+      <li v-for="item in mypublish.list" :key="item.id">
 
-        <!-- 对话框 -->
-        <el-dialog v-model="isCheckDialog" title="博文详情" width="80%">
-            <el-descriptions class="margin-top" :column="3" border>
-                <el-descriptions-item span="2" label="标题">{{current.article.title}}</el-descriptions-item>
-                <el-descriptions-item span="1" label="作者">{{current.article.author}}</el-descriptions-item>
-                <el-descriptions-item span="2" label="时间">{{ moment(current.article.createTime).format('YYYY年MM月DD日 hh时mm分ss秒') }}</el-descriptions-item>
-                <el-descriptions-item span="1" label="标签">{{current.article.tag}}</el-descriptions-item>
-            </el-descriptions>
-        </el-dialog>
-    </div>
+        <div class="item-container">
+        <el-descriptions class="margin-top" :column="3" border>
+          <el-descriptions-item span="2" label="标题">
+            <a :href="getArticleDetailLink(item.id)">{{ item.title }}</a>
+          </el-descriptions-item>
+          <el-descriptions-item span="1" label="作者">{{ item.author }}</el-descriptions-item>
+          <el-descriptions-item span="2" label="时间">
+            {{ moment(item.createTime).format('YYYY.MM.DD hh:mm:ss') }}
+          </el-descriptions-item>
+          <el-descriptions-item span="1" label="操作">
+            <el-button type="text" @click="deleteArticle(item.id)">删除</el-button>
+          </el-descriptions-item>
+        </el-descriptions>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue'
-import { mypublish } from '@/assets/data/articleData'
 import moment from 'moment'
 import { ElMessage, ElMessageBox } from 'element-plus'
 
-const publish = reactive({
-    list:[]
+const articles = JSON.parse(localStorage.getItem('articles')) || []
+
+const currentUser = JSON.parse(localStorage.getItem('NowUser')) || {}
+
+const mypublish = reactive({
+  list: []
 })
 
-
-//当前对话框文章
+// 当前对话框文章
 const current = reactive({
-    article:{}
+  article: {}
 })
 
-//查看对话框
-const isCheckDialog = ref(false)
-
-
-//查看
-const check = (item) => {
-    console.log(item)
-    isCheckDialog.value = true
-    current.article = item
-}
-
-//删除
+// 删除
 const deleteArticle = (id) => {
-
-    console.log(id);
-
-    ElMessageBox.confirm(
-    '确定删除该博文吗？',
-    'Warning',
-    {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      type: 'warning',
-    })
-    .then(() => {
-        publish.list = publish.list.filter(item => {
-            console.log(item.id);
-            return item.id != id
+  ElMessageBox.confirm('确定删除该博文吗？', 'Warning', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  })
+      .then(() => {
+        mypublish.list = mypublish.list.filter((item) => {
+          return item.id !== id
         })
+        // 从localStorage中删除对应数据
+        const updatedArticles = articles.filter((item) => item.id !== id)
+        localStorage.setItem('articles', JSON.stringify(updatedArticles))
+
         ElMessage({
-            type: 'success',
-            message: '删除成功',
+          type: 'success',
+          message: '删除成功'
         })
-    })
-    .catch(() => {
-      ElMessage({
-        type: 'info',
-        message: '已取消',
       })
-    })
-
-    
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: '已取消'
+        })
+      })
 }
 
-onMounted(()=>{
-    publish.list = mypublish
-})
+// 获取文章详情链接
+const getArticleDetailLink = (id) => {
+  return `articleDetial?id=${id}`
+}
 
+onMounted(() => {
+  mypublish.list = articles.filter((item) => item.author === currentUser.username)
+})
 </script>
 
-<style scoped lang='less'>
-.myPublish{
-    padding:20px;
+<style scoped lang="less">
+.myPublish {
+  background-color: #fff;
+  padding: 20px;
+  height: auto;
+  ul {
+    li {
+      padding: 20px 0;
 
-    ul{
-        li{
-            padding:20px 0;
+      .item-container {
+        display: flex;
+        align-items: center;
+
+        .el-descriptions {
+          flex: 1;
         }
-    }
 
-    .title{
-        font-size: 20px;
+        .el-descriptions-item:last-child {
+          margin-left: auto;
+        }
+      }
     }
+  }
+  .title {
+    font-size: 20px;
+  }
 }
 </style>

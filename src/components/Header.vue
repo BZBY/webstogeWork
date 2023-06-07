@@ -7,7 +7,7 @@
       </div>
       <div class="desc">
         <span class="username" v-if="currentUser" @click="goToUserCenter">{{ username }}</span>
-      
+
 
         <span class="menu-icon" @click="toggleMenu">
       <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="32" height="32">

@@ -2,9 +2,7 @@
   <div class="layout">
     <Header></Header>
     <router-view></router-view>
-    <div class="footer" @click="scrollToBottom">
-      @Copyright
-    </div>
+
   </div>
 </template>
 
