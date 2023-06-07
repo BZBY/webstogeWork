@@ -93,6 +93,7 @@ const registerUser = () => {
   const newUser = {
     username: login.value.username,
     password: login.value.password
+
   }
 
   UsersALL.push(newUser)

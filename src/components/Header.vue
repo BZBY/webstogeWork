@@ -5,25 +5,33 @@
       <div class="title">
         <img src="../assets/images/icon.jpg" alt="" /> &nbsp; Blog
       </div>
-      <div class="desc" ><span class="username" @click="goToUserCenter">{{ username }}</span><span class="menu-icon" @click="toggleMenu"></span></div>
+      <div class="desc">
+        <span class="username" v-if="currentUser" @click="goToUserCenter">{{ username }}</span>
+      
+
+        <span class="menu-icon" @click="toggleMenu">
+      <svg class="icon" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" width="32" height="32">
+        <path d="M901.632 896H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808zM901.632 568.32H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808zM901.632 240.64H122.368c-30.72 0-55.808-25.088-55.808-55.808v-1.536c0-30.72 25.088-55.808 55.808-55.808h779.776c30.72 0 55.808 25.088 55.808 55.808v1.536c-0.512 30.72-25.6 55.808-56.32 55.808z"></path>
+      </svg>
+
+
+    </span>
+      </div>
       <div class="date">{{ moment(nowDate).format("YYYY年MM月DD日") }}</div>
     </div>
     <!-- 导航栏 -->
     <div class="nav" :class="{ open: showMenu }">
       <div class="nav-title">
         <span class="title-text">Coding's Blog</span>
-
         <span class="menu-icon2" @click="toggleMenu">返回</span>
       </div>
       <transition name="slide">
         <div class="menu-list" v-show="showMenu">
           <ul>
-            <li v-for="item in menuList" :key="item.id" :class="{ activeLi: currentId == item.id }" @click="toPage(item)">
+            <li :key="item.id" :class="{ activeLi: currentId == item.id }" v-for="item in menuList" @click="toPage(item)">
               {{ item.content }}
             </li>
-            <li v-for="item in login" :key="item.id" :class="{ activeLi: currentId == item.id }" @click="toPage(item)">
-              {{ item.content }}
-            </li>
+            <li v-if="currentUser" @click="logout">退出登录</li>
           </ul>
         </div>
       </transition>
@@ -44,8 +52,14 @@ const router = useRouter();
 const currentId = ref(0);
 const Day = useStore();
 const currentUser = JSON.parse(localStorage.getItem('NowUser'));
+const UsersALLs = JSON.parse(localStorage.getItem('UsersALL'));
 const username = ref(currentUser ? currentUser.nickname : '');
-
+if (currentUser && !username.value) {
+  const user = UsersALLs.find((user) => user.username === currentUser.username);
+  if (user) {
+    username.value = user.nickname;
+  }
+}
 // 当前日期
 const nowDate = ref(new Date());
 
@@ -61,7 +75,6 @@ const menuList = reactive([
     content: "发表",
     path: "/myCreate",
   },
-
   {
     id: 20,
     content: "个人中心",
@@ -71,24 +84,11 @@ const menuList = reactive([
     id: 3,
     content: "聊天室",
     path: "/about",
-  },{
+  },
+  {
     id: 2,
     content: "最新发布",
     path: "/note",
-  },
-]);
-
-// 登录和注册
-const login = reactive([
-  {
-    id: 4,
-    content: "登录",
-    path: "/login",
-  },
-  {
-    id: 5,
-    content: "注册",
-    path: "/register",
   },
 ]);
 
@@ -109,7 +109,14 @@ const toPage = (item) => {
   router.push(item.path);
   toggleMenu();
 };
+
+// 退出登录
+const logout = () => {
+  localStorage.removeItem('NowUser');
+  router.push('/login');
+};
 </script>
+
 
 <style scoped>
 .container {

@@ -22,7 +22,7 @@
       <!-- 评论区 -->
       <div class="comments">
         <div v-for="comment in article.comments" :key="comment.timestamp" class="comment">
-          <span class="username">{{ comment.username }}：</span>
+          <span class="username">{{ comment.nickname }}：</span>
           <span class="content">{{ comment.content }}</span>
         </div>
       </div>
@@ -150,7 +150,7 @@ const isAuthor = ref(false)
 watch(isUserLoggedIn, () => {
   if (isUserLoggedIn.value) {
     const currentUser = JSON.parse(localStorage.getItem('NowUser'))
-    isAuthor.value = currentUser.username === article.author
+    isAuthor.value = currentUser.nickname=== article.author
   } else {
     isAuthor.value = false
   }
