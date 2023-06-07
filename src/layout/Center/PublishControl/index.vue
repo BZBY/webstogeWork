@@ -1,203 +1,93 @@
 <template>
-  <div class="userSet">
-    <div class="title">用户设置</div>
-    <div class="sets">
-      <el-card class="box-card">
-        <template #header>
-          <div class="card-header">
-            <span>用户信息</span>
-          </div>
-        </template>
-        <div>
-          <div class="scroll-container">
-            <el-form ref="formRef" :model="User.userinfo" :rules="rules" :label-position="left" label-width="100px">
-              <el-form-item label="昵称" prop="nickname">
-                <el-input v-model="User.userinfo.nickname" />
-              </el-form-item>
-              <el-form-item label="手机" prop="phone">
-                <el-input v-model="User.userinfo.phone" />
-              </el-form-item>
-              <el-form-item label="性别">
-                <el-radio-group v-model="User.userinfo.gender">
-                  <el-radio label="0" size="large">女</el-radio>
-                  <el-radio label="1" size="large">男</el-radio>
-                </el-radio-group>
-              </el-form-item>
-              <el-form-item>
-                <el-button type="primary" @click="saveModify">保存修改</el-button>
-              </el-form-item>
-            </el-form>
-          </div>
-        </div>
-      </el-card>
+  <div class="bg">
+    <h1><span style="font-size:25px">文章管理</span></h1>
+    <table>
+      <thead>
+      <tr>
+        <th>标题</th>
+        <th>作者</th>
+        <th>摘要</th>
+        <th>操作</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="article in sortedArticles" :key="article.id">
+        <td>{{ article.title }}</td>
+        <td>{{ article.author }}</td>
+        <td>{{ article.desc }}</td>
+        <td>
+          <button class="btn-delete" @click="showDeleteArticleConfirmation(article)">
 
-      <el-card class="safe">
-        <template #header>
-          <div class="card-header">
-            <span>安全设置</span>
-          </div>
-        </template>
-        <div>
-          <el-collapse>
-            <el-collapse-item title="密码" name="1">
-              <div class="scroll-container">
-                <el-form ref="passwordFormRef" :model="User.userinfo" :rules="passwordRules" label-width="100px">
-                  <el-form-item label="原密码" prop="oldPassword">
-                    <el-input v-model="User.userinfo.oldPassword" type="password" />
-                  </el-form-item>
-                  <el-form-item label="修改密码" prop="password">
-                    <el-input v-model="User.userinfo.password" type="password" />
-                  </el-form-item>
-                  <el-form-item label="确认密码" prop="confirmPassword">
-                    <el-input v-model="User.userinfo.confirmPassword" type="password" />
-                  </el-form-item>
-                  <el-form-item>
-                    <el-button type="primary" style="margin-top:10px" @click="modifyPsd">修改密码</el-button>
-                  </el-form-item>
+            <svg class="icon" viewBox="0 0 1024 1024" width="24" height="24">
+              <path d="M909.050991 169.476903l-217.554898 0 0-31.346939c0-39.5866-32.205493-71.792093-71.793116-71.792093L408.15591 66.337871c-39.5866 0-71.792093 32.205493-71.792093 71.792093l0 31.346939L113.349581 169.476903c-11.013845 0-19.942191 8.940626-19.942191 19.954471s8.928347 19.954471 19.942191 19.954471l84.264149 0 0 640.687918c0 60.479443 49.203632 109.683075 109.683075 109.683075l416.474366 0c60.479443 0 109.683075-49.203632 109.683075-109.683075L833.454246 209.385844l75.595722 0c11.012821 0 19.942191-8.940626 19.942191-19.954471S920.063813 169.476903 909.050991 169.476903zM376.2482 138.130987c0-17.593703 14.314007-31.907711 31.907711-31.907711l211.547067 0c17.593703 0 31.907711 14.314007 31.907711 31.907711l0 31.346939L376.2482 169.477926 376.2482 138.130987zM793.569864 850.074785c0 38.486546-31.312146 69.798692-69.798692 69.798692L307.297828 919.873478c-38.486546 0-69.798692-31.312146-69.798692-69.798692L237.499136 211.042577l556.070728 0L793.569864 850.074785z" fill="#272636"></path>
+              <path d="M510.662539 861.276918c11.012821 0 19.954471-8.92937 19.954471-19.942191L530.61701 294.912753c0-11.013845-8.94165-19.942191-19.954471-19.942191s-19.954471 8.928347-19.954471 19.942191L490.708068 841.334727C490.708068 852.347548 499.649717 861.276918 510.662539 861.276918z" fill="#272636"></path>
+              <path d="M374.562814 801.449321c11.012821 0 19.954471-8.92937 19.954471-19.942191L394.517285 354.74035c0-11.013845-8.94165-19.942191-19.954471-19.942191s-19.954471 8.928347-19.954471 19.942191l0 426.76678C354.608344 792.519951 363.549993 801.449321 374.562814 801.449321z" fill="#272636"></path>
+              <path d="M649.832182 801.449321c11.012821 0 19.954471-8.92937 19.954471-19.942191L669.786653 354.74035c0-11.013845-8.94165-19.942191-19.954471-19.942191s-19.954471 8.928347-19.954471 19.942191l0 426.76678C629.877711 792.519951 638.81936 801.449321 649.832182 801.449321z" fill="#272636"></path>
+            </svg>
 
 
-                </el-form>
-              </div>
-            </el-collapse-item>
-          </el-collapse>
-        </div>
-      </el-card>
-    </div>
+          </button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 
-<script setup>
-import { ref, onMounted } from 'vue'
-import { useUser } from '@/stores/useLogin'
-import { ElMessage } from 'element-plus'
-
-const User = useUser()
-const formRef = ref(null)
-const passwordFormRef = ref(null)
-const rules = {
-  nickname: [
-    { required: true, message: '请输入昵称', trigger: 'blur' },
-    { min: 2, max: 7, message: '昵称长度为2~7个字符', trigger: 'blur' }
-  ],
-  phone: [
-    { required: true, message: '请输入手机号', trigger: 'blur' },
-    { pattern: /^1[3456789]\d{9}$/, message: '请输入有效的中国手机号', trigger: 'blur' }
-  ]
-}
-const passwordRules = {
-  oldPassword: [
-    { required: true, message: '请输入原密码', trigger: 'blur' }
-  ],
-  password: [
-    { required: true, message: '请输入新密码', trigger: 'blur' },
-    { min: 6, max: 15, message: '密码长度为6~15位', trigger: 'blur' }
-  ],
-  confirmPassword: [
-    { required: true, message: '请再次输入密码', trigger: 'blur' }
-  ]
-}
-
-onMounted(() => {
-  const currentUser = JSON.parse(localStorage.getItem('NowUser'))
-  if (currentUser) {
-    User.userinfo.nickname = currentUser.nickname
-    User.userinfo.phone = currentUser.phone
-    User.userinfo.gender = currentUser.gender
-  }
-})
-
-const saveModify = () => {
-  formRef.value.validate((valid) => {
-    if (valid) {
-      const currentUser = JSON.parse(localStorage.getItem('NowUser'))
-      if (currentUser) {
-        currentUser.nickname = User.userinfo.nickname
-        currentUser.phone = User.userinfo.phone
-        currentUser.gender = User.userinfo.gender
-        localStorage.setItem('NowUser', JSON.stringify(currentUser))
-        // 更新与当前用户账号相同的其他用户信息
-        const users = JSON.parse(localStorage.getItem('UsersALL'))
-        if (users) {
-
-          users.forEach((user) => {
-            if (user.username === currentUser.username) {
-
-              user.nickname = User.userinfo.nickname
-              user.phone = User.userinfo.phone
-              user.gender = User.userinfo.gender
-            }
-          })
-          localStorage.setItem('UsersALL', JSON.stringify(users))
-        }
-
-
-        ElMessage.success('保存修改')
-      } else {
-        ElMessage.error('用户不存在')
+<script>
+export default {
+  data() {
+    return {
+      articles: [],
+    };
+  },
+  created() {
+    // 从 localStorage 中获取文章数据
+    this.articles = JSON.parse(localStorage.getItem('articles')) || [];
+  },
+  computed: {
+    sortedArticles() {
+      // 按发布时间排序的文章列表
+      return this.articles.sort((a, b) => new Date(b.createTime) - new Date(a.createTime));
+    },
+  },
+  methods: {
+    showDeleteArticleConfirmation(article) {
+      const confirmationMessage = `确定要删除文章 "${article.title}" 吗？`;
+      if (confirm(confirmationMessage)) {
+        this.deleteArticle(article);
+        alert(`文章 "${article.title}" 已成功删除。`);
       }
-    } else {
-      ElMessage.error('保存失败，请检查输入')
-    }
-  })
-}
-
-const modifyPsd = () => {
-  passwordFormRef.value.validate((valid) => {
-    if (valid) {
-      if (User.userinfo.password === User.userinfo.confirmPassword) {
-        const currentUser = JSON.parse(localStorage.getItem('NowUser'))
-        if (currentUser) {
-          if (User.userinfo.oldPassword === currentUser.password) {
-            currentUser.password = User.userinfo.password
-            localStorage.setItem('NowUser', JSON.stringify(currentUser))
-            // 更新与当前用户账号相同的其他用户的密码
-            const users = JSON.parse(localStorage.getItem('UsersALL'))
-            if (users) {
-              users.forEach((user) => {
-                if (user.username === currentUser.username) {
-                  user.password = User.userinfo.password
-                }
-              })
-              localStorage.setItem('UsersALL', JSON.stringify(users))
-            }
-
-            ElMessage.success('修改成功')
-          } else {
-            ElMessage.error('原密码错误')
-          }
-        } else {
-          ElMessage.error('用户不存在')
-        }
-      } else {
-        ElMessage.error('确认密码与新密码不一致')
+    },
+    deleteArticle(article) {
+      // 删除文章
+      const index = this.articles.findIndex(a => a.id === article.id);
+      if (index !== -1) {
+        this.articles.splice(index, 1);
+        localStorage.setItem('articles', JSON.stringify(this.articles));
       }
-    } else {
-      ElMessage.error('密码修改失败，请检查输入')
-    }
-  })
-}
+    },
+  },
+};
 </script>
 
-<style scoped lang="less">
-.userSet {
-  padding: 20px;
+<style scoped>
+.bg{
+  background-color: #fff;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
 
-  .title {
-    font-size: 20px;
-  }
+th,
+td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
 
-  .sets {
-    width: 100%;
-    margin-top: 30px;
-  }
-
-  .safe {
-    margin-top: 30px;
-  }
-
-  .scroll-container {
-    height: 300px;
-    overflow-y: auto;
-  }
+button.btn-delete {
+  background-color: #ccc;
 }
 </style>

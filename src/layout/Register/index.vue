@@ -5,19 +5,19 @@
       <form @submit.prevent="submitReg">
         <div class="form-group">
           <label for="username">用户名</label>
-          <input v-model="register.username" type="text" id="username" required>
+          <input v-model="register.username" type="text" id="username" required pattern="[A-Za-z0-9]+" title="账号必须是英文数字组合">
         </div>
         <div class="form-group">
           <label for="password">密码</label>
-          <input v-model="register.password" type="password" id="password" required>
+          <input v-model="register.password" type="password" id="password" required minlength="6" maxlength="15" title="密码必须6~15位数">
         </div>
         <div class="form-group">
           <label for="repassword">确认密码</label>
-          <input v-model="register.repassword" type="password" id="repassword" required>
+          <input v-model="register.repassword" type="password" id="repassword" required :pattern="register.password" title="密码不一致">
         </div>
         <div class="form-group">
           <label for="nickname">昵称</label>
-          <input v-model="register.nickname" type="text" id="nickname" required>
+          <input v-model="register.nickname" type="text" id="nickname" required minlength="2" maxlength="7" title="昵称必须2~7字符">
         </div>
         <div class="form-group">
           <label for="gender">性别</label>
@@ -28,7 +28,7 @@
         </div>
         <div class="form-group">
           <label for="phone">手机</label>
-          <input v-model="register.phone" type="text" id="phone" required>
+          <input v-model="register.phone" type="text" id="phone" required pattern="^1[3456789]\d{9}$" title="手机号必须满足中国大陆手机号">
         </div>
         <div class="form-buttons">
           <button type="submit">注册</button>
@@ -125,7 +125,7 @@ export default {
       this.reset()
 
       // 设置当前登录用户
-      this.updateNowUser(newUser.username, newUser.isAdmin)
+      this.updateNowUser(newUser.username, newUser.isAdmin, newUser.nickname)
 
 
       // 获取当前页面的根路径
@@ -134,10 +134,11 @@ export default {
       // 跳转到根路径
       window.location.href = rootPath
     },
-    updateNowUser(username, isAdmin) {
+    updateNowUser(username, isAdmin,nickname) {
       const nowUser = {
         username: username,
-        isAdmin: isAdmin
+        isAdmin: isAdmin,
+        nickname:nickname
       }
       localStorage.setItem('NowUser', JSON.stringify(nowUser))
     }
