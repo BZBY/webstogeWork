@@ -2,14 +2,12 @@
   <!-- 用户主页 -->
   <div class="center">
     <div class="main">
-      <component :is="getCurrentComponent()" />
+      <component :is="currentComponent" />
     </div>
     <div class="bottomNav">
       <ul class="tabs">
         <li v-for="item in tabs.list" @click="changeTab(item.id)" :class="{'active': item.id === tabs.active}" :key="item.id">
-          <template v-if="shouldDisplayTab(item.id)">
-            {{ item.name }}
-          </template>
+          {{ item.name }}
         </li>
       </ul>
     </div>
@@ -17,15 +15,12 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
-import { useUser } from '../../stores/useLogin'
+import { ref, reactive, computed } from 'vue'
 import MyPublish from './MyPublish/index.vue'
 import UserSet from './UserSet/index.vue'
 import Drafts from './Drafts/index.vue'
 import AdminSettings from './AdminSettings/index.vue'
 import PublishControl from './PublishControl/index.vue'
-
-const User = useUser()
 
 const tabs = reactive({
   list: [
@@ -49,13 +44,8 @@ const tabs = reactive({
   active: 0
 })
 
-// 改变标签页
-const changeTab = (id) => {
-  tabs.active = id
-}
-
 // 获取当前组件
-const getCurrentComponent = () => {
+const currentComponent = computed(() => {
   switch (tabs.active) {
     case 0:
       return MyPublish
@@ -64,20 +54,21 @@ const getCurrentComponent = () => {
     case 2:
       return UserSet
     case 3:
-      return isAdmin() ? AdminSettings : null
+      return isAdmin() ? AdminSettings : Notice
     case 4:
-      return isAdmin() ? PublishControl : null
+      return isAdmin() ? PublishControl : Notice
     default:
       return null
   }
-}
+})
 
-// 判断是否应该显示特定的标签页
-const shouldDisplayTab = (id) => {
+// 改变标签页
+const changeTab = (id) => {
   if ((id === 3 || id === 4) && !isAdmin()) {
-    return false
+    tabs.active = -1; // 设置为无效的标签页
+  } else {
+    tabs.active = id;
   }
-  return true
 }
 
 // 判断当前用户是否为管理员
@@ -85,12 +76,25 @@ const isAdmin = () => {
   const currentUser = JSON.parse(localStorage.getItem('NowUser'))
   const UsersALLs = JSON.parse(localStorage.getItem('UsersALL'))
   const matchedUser = UsersALLs.find(user => user.username === currentUser.username)
-  return matchedUser && matchedUser.isAdmin === 1
+  return matchedUser && matchedUser.isAdmin == 1
+}
+
+// Notice 组件
+const Notice = {
+  template: `
+    <div>
+      <h1>权限不足</h1>
+      <p>您没有访问此页面的权限</p>
+    </div>
+  `
 }
 
 </script>
 
 <style scoped lang="less">
+*{
+  font-family:"Microsoft Yahei";
+}
 .center {
   position: relative;
   min-height: 100vh;

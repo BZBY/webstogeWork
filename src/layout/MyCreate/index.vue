@@ -59,6 +59,7 @@ const article = reactive({
   id: 0,
   title: "",
   author: "",
+  username:"",
   tag: "",
   content: "",
   readcount: 0,
@@ -83,6 +84,7 @@ onMounted(() => {
         article.content = data.content;
         article.desc = "desc : " + data.content.slice(0, 15) + (data.content.length > 15 ? "..." : "");
         article.author = data.author;
+        article.username = data.username;
       }
     }
   }
@@ -119,13 +121,16 @@ const publish = () => {
 
       // 获取最大id值
       const maxId = articles.reduce((max, article) => Math.max(max, article.id), 0);
+        const currentUsers = JSON.parse(localStorage.getItem('NowUser'));
+        const matchedUsers = JSON.parse(localStorage.getItem('UsersALL')).find(user => user.username === currentUsers.username);
 
       // 构造新的文章对象
       const newArticle = {
         id: maxId + 1,
         title: article.title,
-        author: User.userinfo.nickname,
+        author: matchedUsers.nickname,
         tag: article.tag,
+        username: User.userinfo.username,
         content: article.content,
         readcount: 0,
         likecount: 0,
